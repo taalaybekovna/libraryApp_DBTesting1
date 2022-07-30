@@ -69,6 +69,7 @@ public class BooksStepDefs {
 
         BrowserUtil.waitFor(3);
 
+        // Get data from UI
         String actualBookName = bookPage.bookName.getText();
         String actualAuthorName = bookPage.author.getAttribute("value");
         String actualLISBN=bookPage.isbn.getAttribute("value");
@@ -76,8 +77,14 @@ public class BooksStepDefs {
         String actualYear = bookPage.year.getAttribute("value");
         String actualDesc = bookPage.description.getAttribute("value");
 
-        System.out.println(actualBookName);
-        System.out.println(actualAuthorName);
+        // get related book info from DB
+        String query="select name, author,isbn,description,year from books\n" +
+                "where name ='"+bookName+"'";
+
+        DB_Util.runQuery(query);
+
+        Map<String, String> rowMap = DB_Util.getRowMap(1);
+
 
     }
 
