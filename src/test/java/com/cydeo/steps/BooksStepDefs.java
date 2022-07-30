@@ -12,19 +12,20 @@ import java.util.List;
 import java.util.Map;
 
 public class BooksStepDefs {
-    BookPage bookPage=new BookPage();
+    BookPage bookPage = new BookPage();
     List<String> actualCategoryList;
 
 
     @When("the user navigates to {string} page")
     public void the_user_navigates_to_page(String moduleName) {
         new DashBoardPage().navigateModule(moduleName);
+
     }
 
 
     @When("the user gets all book categories in webpage")
     public void the_user_gets_all_book_categories_in_webpage() {
-        actualCategoryList=BrowserUtil.getAllSelectOptions(bookPage.mainCategoryElement);
+        actualCategoryList = BrowserUtil.getAllSelectOptions(bookPage.mainCategoryElement);
         actualCategoryList.remove(0);
         System.out.println("expectedCategoryList = " + actualCategoryList);
     }
@@ -46,5 +47,41 @@ public class BooksStepDefs {
         BrowserUtil.waitForClickablility(bookPage.editBook(bookName), 5).click();
 
     }
+
+    @Then("verify book categories must match book categories table from db")
+    public void verify_book_categories_must_match_book_categories_table_from_db() {
+
+        String query = "select name from book_categories";
+
+        DB_Util.runQuery(query);
+
+        //store data
+        List<String> expectedCategoryList = DB_Util.getColumnDataAsList(1);
+
+        //Assertions
+        Assert.assertEquals(expectedCategoryList, actualCategoryList);
+
+
+    }
+
+    @Then("book information must match the database for {string}")
+    public void book_information_must_match_the_database_for(String bookName) {
+
+        BrowserUtil.waitFor(3);
+
+        String actualBookName = bookPage.bookName.getText();
+        String actualAuthorName = bookPage.author.getAttribute("value");
+        String actualLISBN=bookPage.isbn.getAttribute("value");
+        String actualISBN = bookPage.isbn.getAttribute("value");
+        String actualYear = bookPage.year.getAttribute("value");
+        String actualDesc = bookPage.description.getAttribute("value");
+
+        System.out.println(actualBookName);
+        System.out.println(actualAuthorName);
+
+    }
+
+
+
 
 }

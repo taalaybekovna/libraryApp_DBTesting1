@@ -35,6 +35,14 @@ public class Hooks {
         Driver.closeDriver();
 
     }
+    @Before("@db")
+    public void setUpDB(){
+        System.out.println("CONNECTION IS SUCCESSFUL");
+    }
+    @After("@db")
+    public void destroyDB(){
+        System.out.println("CONNECTION IS CLOSED");
+    }
 
 
 }
